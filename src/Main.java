@@ -2,15 +2,13 @@ import db.PresencasDB;
 import nomes.AlunoPresenca;
 import nomes.Alunos;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
-import java.util.Map;
-
 
 public class Main {
-
     static Alunos listaDeAlunos = new Alunos();
     static PresencasDB presencasDB = new PresencasDB();
-    static AlunoPresenca alunoPresenca = new AlunoPresenca();
 
     public static void main(String[] args) throws Exception {
 
@@ -46,22 +44,30 @@ public class Main {
             case 2 : { // Registrar chamada
                 System.out.print("Digite a data da chamada: ");
                 String data = scanner.next();
+
+                List<AlunoPresenca> presencas = new ArrayList<>();
+
                 for (String nome : listaDeAlunos.getListaAlunos()) {
                     System.out.print(nome + " está presente? s/n: ");
                     String presenca = scanner.next();
-                    alunoPresenca.addNovoAlunoPresenca(nome,presenca);
+                    AlunoPresenca alunoPresenca = new AlunoPresenca(nome, presenca);
+                    presencas.add(alunoPresenca);
                 }
-                presencasDB.addNovaChamada(data,alunoPresenca);
+
+                presencasDB.addNovaChamada(data, presencas);
                 System.out.println("Chamada do dia " + data + " registrada com sucesso.");
                 break;
             }
             case 3 : { // Exibir presenças em lista
                 System.out.println("Lista das Presenças Registradas:");
-                for (String a : presencasDB.getDiarioClasse().keySet()) {
-                    System.out.println("Data: " + a);
-                    AlunoPresenca mapa = presencasDB.getDiarioClasse().get(a);
-                    for (String b : mapa.getAlunosPresencas().keySet()) {
-                        System.out.print(b + ": " + mapa.getAlunosPresencas().get(b) + " | ");
+
+                for (String data : presencasDB.getDiarioClasse().keySet()) {
+                    System.out.println("Data: " + data);
+
+                    List<AlunoPresenca> presencas = presencasDB.getDiarioClasse().get(data);
+
+                    for (AlunoPresenca aluno : presencas) {
+                        System.out.print(aluno.getNome() + ": " + aluno.getPresente() + " | ");
                     }
                     System.out.println("");
                     System.out.println("---------------------------------------");
