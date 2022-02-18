@@ -1,0 +1,13 @@
+# Módulo 6 - Atividade
+
+
+
+Sua tarefa deste módulo é criar um diário de classe. O diário de classe é composto por uma lista de alunos associada a uma lista de datas, onde para cada data você terá que apontar se o aluno está presente ou não, veja o exemplo a seguir:
+
+---------  Data 1    -   Data 2   - ... -  Data N
+Aluno 1   Presente  -  Ausente   - ... -   ... 
+Aluno 2   Presente  -  Ausente   - ... -   ...
+   ...      ...          ...       ...     ...
+Aluno N   Presente  -  Ausente   - ... -   ...
+
+Esta estrutura pode ser implementada usando algumas combinações de listas, arrays ou Collections em Java. Use sua criatividade para implementar de acordo com a figura acima.
