@@ -1,18 +1,19 @@
 package nomes;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class AlunoPresenca {
+    private String presente;
+    private String nome;
 
-    private Map<String, String> alunosPresencas = new HashMap<>();
-
-
-    public Map<String, String> getAlunosPresencas() {
-        return alunosPresencas;
+    public AlunoPresenca(String nome, String presente) {
+        this.nome = nome;
+        this.presente = presente;
     }
 
-    public void addNovoAlunoPresenca (String nome, String presenca) {
-        alunosPresencas.put(nome,presenca);
+    public String getPresente() {
+        return presente;
+    }
+
+    public String getNome() {
+        return nome;
     }
 }
