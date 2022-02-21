@@ -2,6 +2,7 @@ import db.PresencasDB;
 import nomes.AlunoPresenca;
 import nomes.Alunos;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Main {
@@ -12,7 +13,7 @@ public class Main {
 
         int opcao = 0;
         do {
-            System.out.println("1 - Registrar novo Aluno");
+            System.out.println("1 - Cadastrar novo Aluno");
             System.out.println("2 - Registrar chamada");
             System.out.println("3 - Exibir presenças em lista");
             System.out.println("4 - Exibir diário de classe em tabela");
@@ -43,9 +44,20 @@ public class Main {
                 if (listaDeAlunos.getListaAlunos().isEmpty()) {
                     System.out.println("Lista de Alunos está vazia. Cadastre alunos.");
                 } else {
-                    System.out.print("Digite a data da chamada (dd/mm/aaaa): ");
-                    String data = scanner.next();
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                    System.out.print("Considerar data de hoje? s/n: ");
+                    String opcaoData = scanner.next();
 
+                    String data;
+                    if (opcaoData.equals("s")) {
+                        Calendar dataHoje = Calendar.getInstance();
+                        Date dataDate = dataHoje.getTime();
+                        data = sdf.format(dataDate);
+                        System.out.println("Considerando a data de hoje: " + data);
+                    } else {
+                        System.out.print("Digite a data da chamada (dd/mm/aaaa): ");
+                        data = scanner.next();
+                    }
                     List<AlunoPresenca> presencas = new ArrayList<>();
 
                     for (String nome : listaDeAlunos.getListaAlunos()) {
@@ -60,14 +72,16 @@ public class Main {
                     }
                     presencasDB.addNovaChamada(data, presencas);
                     System.out.println("Chamada do dia " + data + " registrada com sucesso.");
-                }
+                    }
+
                 break;
             }
             case 3 : { // Exibir presenças em lista
                 System.out.println("Lista das Presenças Registradas:");
 
-                for (String data : presencasDB.getDiarioClasse().keySet()) {
-                    System.out.println("Data: " + data);
+                for (Date data : presencasDB.getDiarioClasse().keySet()) {
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                    System.out.println("Data: " + sdf.format(data));
 
                     List<AlunoPresenca> presencas = presencasDB.getDiarioClasse().get(data);
 
@@ -80,23 +94,28 @@ public class Main {
                 break;
             }
             case 4 : { // Exibir diário de classe em tabela
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                 System.out.println("---------------- DIÁRIO DE CLASSE ---------------- ");
                 System.out.print("| Nomes/Datas | ");
 
-                String[] datasOrdenadas = new String[presencasDB.getDiarioClasse().size()];
+                Date[] datasOrdenadas = new Date[presencasDB.getDiarioClasse().size()];
                 int i = 0;
-                for (String data : presencasDB.getDiarioClasse().keySet()) { // Gerar vetor com datas
+                for (Date data : presencasDB.getDiarioClasse().keySet()) { // Gerar vetor com datas
                     datasOrdenadas[i] = data;
                     i++;
                 }
                 Arrays.sort(datasOrdenadas);
-                for (String data : datasOrdenadas) {
-                    System.out.print(data + " | "); // Imprimindo datas ordenadas
+                for (Date data : datasOrdenadas) {
+                    System.out.print(sdf.format(data) + " | "); // Imprimindo datas ordenadas
                 }
                 System.out.println("");
                 for (String nomeLinha : listaDeAlunos.getListaAlunos()) {
-                    System.out.print("|    " + nomeLinha + "     |  ");
-                    for (String data : datasOrdenadas) {
+                    System.out.print("| " + nomeLinha);
+                    for (int j = 0 ; j < (12-nomeLinha.length()); j++) {
+                        System.out.print(" ");// 8 espaços, nome com 4 letras
+                    }
+                    System.out.print("|  ");
+                    for (Date data : datasOrdenadas) {
                         List<AlunoPresenca> presencas = presencasDB.getDiarioClasse().get(data);
                         String presencaCelula = null;
                         for (AlunoPresenca aluno : presencas) {
@@ -121,9 +140,9 @@ public class Main {
                 break;
             }
             case 6 : { // Para teste - Preencher 3 nomes automaticamente
-                listaDeAlunos.addNovoAluno("João");
-                listaDeAlunos.addNovoAluno("José");
-                listaDeAlunos.addNovoAluno("Mara");
+                listaDeAlunos.addNovoAluno("Guilherme");
+                listaDeAlunos.addNovoAluno("Ana");
+                listaDeAlunos.addNovoAluno("Gabriel");
 
                 List<AlunoPresenca> presencas = new ArrayList<>();
                 AlunoPresenca alunoPresenca = new AlunoPresenca(listaDeAlunos.getListaAlunos().get(0),"Presente");
@@ -132,7 +151,7 @@ public class Main {
                 presencas.add(alunoPresenca);
                 alunoPresenca = new AlunoPresenca(listaDeAlunos.getListaAlunos().get(2),"Presente");
                 presencas.add(alunoPresenca);
-                presencasDB.addNovaChamada("12/02/2022",presencas);
+                presencasDB.addNovaChamada("14/02/2022",presencas);
 
                 presencas = new ArrayList<>();
                 alunoPresenca = new AlunoPresenca(listaDeAlunos.getListaAlunos().get(0),"AUSENTE ");
@@ -141,7 +160,7 @@ public class Main {
                 presencas.add(alunoPresenca);
                 alunoPresenca = new AlunoPresenca(listaDeAlunos.getListaAlunos().get(2),"AUSENTE ");
                 presencas.add(alunoPresenca);
-                presencasDB.addNovaChamada("13/02/2022",presencas);
+                presencasDB.addNovaChamada("15/02/2022",presencas);
 
                 presencas = new ArrayList<>();
                 alunoPresenca = new AlunoPresenca(listaDeAlunos.getListaAlunos().get(0),"Presente");
@@ -150,7 +169,7 @@ public class Main {
                 presencas.add(alunoPresenca);
                 alunoPresenca = new AlunoPresenca(listaDeAlunos.getListaAlunos().get(2),"AUSENTE ");
                 presencas.add(alunoPresenca);
-                presencasDB.addNovaChamada("14/02/2022",presencas);
+                presencasDB.addNovaChamada("16/02/2022",presencas);
 
                 break;
             }
